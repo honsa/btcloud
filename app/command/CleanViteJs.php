@@ -73,6 +73,7 @@ class CleanViteJs extends Command
             }
         }
         if(substr($content,$start-1,1) == ',') $start--;
+        else if(substr($content,$end+1,1) == ',') $end++;
         return substr($content, $start, $end - $start + 1);
     }
     
@@ -89,6 +90,14 @@ class CleanViteJs extends Command
             }
             closedir($dh);
         }
+    }
+
+    private function str_replace_once($needle, $replace, $haystack) {
+        $pos = strpos($haystack, $needle);
+        if ($pos === false) {
+            return $haystack;
+        }
+        return substr_replace($haystack, $replace, $pos, strlen($needle));
     }
     
     private function handlefile($filepath){
@@ -129,13 +138,10 @@ class CleanViteJs extends Command
         }
 
         if(strpos($file, '"calc"') !== false && strpos($file, '"checkConfirm"') !== false){ //main2
-            $file = preg_replace('!,isCalc:\w+,isInput:\w+,isCheck:\w+,!', ',isCalc:!1,isInput:!1,isCheck:!1,', $file);
-            $file = preg_replace('!\w+\(\(\(\)=>"calc"===\w+\.type\|\|"checkConfirm"===\w+\.type\)\)!', '!1', $file);
+            $file = preg_replace('!,isCalc:\w+,isInput:\w+,!', ',isCalc:!1,isInput:!1,', $file);
+            $file = preg_replace('!"calc"===\w+\.type!', '!1', $file);
             $file = preg_replace('!\w+\(\(\(\)=>"input"===\w+\.type\)\)!', '!1', $file);
-            $file = preg_replace('!\w+\(\(\(\)=>"check"===\w+\.type\|\|"checkConfirm"===\w+\.type\)\)!', '!1', $file);
-            $file = preg_replace('!\w+\(\(function\(\)\{return"calc"===\w+\.type\|\|"checkConfirm"===\w+\.type\}\)\)!', '!1', $file);
             $file = preg_replace('!\w+\(\(function\(\)\{return"input"===\w+\.type\}\)\)!', '!1', $file);
-            $file = preg_replace('!\w+\(\(function\(\)\{return"check"===\w+\.type\|\|"checkConfirm"===\w+\.type\}\)\)!', '!1', $file);
             $flag = true;
         }
     
@@ -152,13 +158,13 @@ class CleanViteJs extends Command
             $flag = true;
         }
     
-        /*if(strpos($file, '"bt-waf-gray"')!==false){ //site.popup
-            $code = $this->getExtendCode($file, '"bt-waf-gray"', 2);
+        if(strpos($file, 'svgtofont-left-waf')!==false){ //site.table
+            $code = $this->getExtendCode($file, 'svgtofont-left-waf');
             $code = $this->getExtendCode($file, $code, 1, '[', ']');
             $code = $this->getExtendFunction($file, $code);
             $file = str_replace($code, '""', $file);
             $flag = true;
-        }*/
+        }
     
         if(strpos($file, '"商用SSL证书"')!==false){ //site-ssl
             $code = $this->getExtendFunction($file, '"商用SSL证书"', '{', '}');
@@ -167,6 +173,7 @@ class CleanViteJs extends Command
             $file = str_replace($code, '', $file);
             $file = str_replace('"currentCertInfo":"busSslList"', '"currentCertInfo":"currentCertInfo"', $file);
             $file = preg_replace('!\{(\w+)\.value="busSslList",\w+\(\)\}!', '{$1.value="letsEncryptList"}', $file);
+            $file = preg_replace('!defaultActive:(\w+)\("sslCertificate"\)!', 'defaultActive:$1("EncryptCertificate")', $file);
             $flag = true;
         }
     
@@ -205,9 +212,9 @@ class CleanViteJs extends Command
                 $code = $this->getExtendFunction($file, $code);
                 $start = strpos($file, $code);
                 if(substr($file,$start-1,1) == ':'){
-                    $file = str_replace($code, '{}', $file);
+                    $file = $this->str_replace_once($code, '{}', $file);
                 }else{
-                    $file = str_replace($code, '', $file);
+                    $file = $this->str_replace_once($code, '', $file);
                 }
                 $flag = true;
             }

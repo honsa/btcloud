@@ -12,7 +12,7 @@ Route::post('/down/download_plugin', 'api/download_plugin');
 Route::post('/down/download_plugin_main', 'api/download_plugin_main');
 Route::post('/panel/get_soft_list_status', 'api/return_success');
 Route::post('/panel/get_unbinding', 'api/return_success');
-Route::post('/bt_cert', 'api/return_error');
+Route::post('/bt_cert', 'api/bt_cert');
 Route::post('/Auth/GetAuthToken', 'api/get_auth_token');
 Route::post('/Auth/GetBindCode', 'api/return_error');
 Route::any('/bt_monitor/update_history', 'api/btm_update_history');
@@ -39,6 +39,7 @@ Route::group('api', function () {
     Route::get('/getUpdateLogs', 'api/get_update_logs');
     Route::get('/panel/get_version', 'api/get_version');
     Route::get('/wpanel/get_version', 'api/get_version_win');
+    Route::get('/panel/get_panel_version', 'api/get_panel_version');
     Route::get('/SetupCount', 'api/setup_count');
     Route::any('/panel/updateLinux', 'api/check_update');
     Route::any('/wpanel/updateWindows', 'api/check_update_win');
@@ -119,6 +120,13 @@ Route::group('api', function () {
     Route::post('/bt_waf/reportInterceptFail', 'api/return_empty');
     Route::any('/panel/get_spider', 'api/get_spider');
 
+    Route::post('/Auth/GetSocre', 'api/get_ssl_list');
+    Route::post('/Auth/SetSocre', 'api/get_ssl_list');
+    Route::post('/Auth/SubmitScore', 'api/get_ssl_list');
+
+    Route::post('/Cert_cloud_deploy/get_cert_list', 'api/return_success');
+    Route::post('/Cert_cloud_deploy/del_cert', 'api/return_success');
+
     Route::miss('api/return_error');
 });
 
@@ -146,6 +154,7 @@ Route::group('admin', function () {
     Route::get('/deplist', 'admin/deplist');
     Route::get('/refresh_deplist', 'admin/refresh_deplist');
     Route::get('/cleancache', 'admin/cleancache');
+    Route::any('/ssl', 'admin/ssl');
 
 })->middleware(\app\middleware\CheckAdmin::class);
 

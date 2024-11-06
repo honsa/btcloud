@@ -12,15 +12,15 @@ INSERT INTO `cloud_config` (`key`, `value`) VALUES
 ('bt_key', ''),
 ('whitelist', '0'),
 ('download_page', '1'),
-('new_version', '8.0.5'),
+('new_version', '9.2.0'),
 ('update_msg', '暂无更新日志'),
-('update_date', '2024-01-12'),
-('new_version_win', '7.9.0'),
+('update_date', '2024-09-13'),
+('new_version_win', '8.1.0'),
 ('update_msg_win', '暂无更新日志'),
-('update_date_win', '2023-07-20'),
-('new_version_btm', '2.2.9'),
+('update_date_win', '2024-07-17'),
+('new_version_btm', '2.3.0'),
 ('update_msg_btm', '暂无更新日志'),
-('update_date_btm', '2023-08-11'),
+('update_date_btm', '2024-04-24'),
 ('updateall_type', '0'),
 ('syskey', 'UqP94LtI8eWAIgCP');
 
@@ -48,7 +48,7 @@ CREATE TABLE `cloud_white` (
 DROP TABLE IF EXISTS `cloud_record`;
 CREATE TABLE `cloud_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(200) NOT NULL,
+  `ip` varchar(20) NOT NULL,
   `addtime` datetime NOT NULL,
   `usetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
